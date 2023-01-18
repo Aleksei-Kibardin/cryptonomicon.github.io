@@ -66,7 +66,7 @@
                 CHD
               </span>
             </div> -->
-            <!-- <div class="text-sm text-red-600">Такой тикер уже добавлен</div> -->
+            <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
           </div>
         </div>
         <button
@@ -90,6 +90,7 @@
           Добавить
         </button>
       </section>
+<<<<<<< HEAD
       <template v-if="tickers.length">
         <hr class="w-full border-t border-gray-600 my-4" />
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -129,9 +130,126 @@
                 ></path></svg
               >Удалить
             </button>
+=======
+
+      <hr class="w-full border-t border-gray-600 my-4" />
+      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div
+          v-for="t in tickers"
+          :key="t"
+          class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+        >
+          <div class="px-4 py-5 sm:p-6 text-center">
+            <dt class="text-sm font-medium text-gray-500 truncate">
+              {{ t }}
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">1.11</dd>
+>>>>>>> parent of 137700d ([200~)
           </div>
-        </dl>
-      </template>
+          <div class="w-full border-t border-gray-200"></div>
+          <button
+            class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="#718096"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path></svg
+            >Удалить
+          </button>
+        </div>
+        <div
+          class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid border-4 cursor-pointer"
+        >
+          <div class="px-4 py-5 sm:p-6 text-center">
+            <dt class="text-sm font-medium text-gray-500 truncate">
+              VUE - RUB
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">80000.00</dd>
+          </div>
+          <div class="w-full border-t border-gray-200"></div>
+          <button
+            class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="#718096"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path></svg
+            >Удалить
+          </button>
+        </div>
+        <div
+          class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+        >
+          <div class="px-4 py-5 sm:p-6 text-center">
+            <dt class="text-sm font-medium text-gray-500 truncate">
+              BTC - USD
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">99999.99</dd>
+          </div>
+          <div class="w-full border-t border-gray-200"></div>
+          <button
+            class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="#718096"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path></svg
+            >Удалить
+          </button>
+        </div>
+        <div
+          class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+        >
+          <div class="px-4 py-5 sm:p-6 text-center">
+            <dt class="text-sm font-medium text-gray-500 truncate">
+              DOGE - USD
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">0.0014</dd>
+          </div>
+          <div class="w-full border-t border-gray-200"></div>
+          <button
+            class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
+          >
+            <svg
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="#718096"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path></svg
+            >Удалить
+          </button>
+        </div>
+      </dl>
       <hr class="w-full border-t border-gray-600 my-4" />
       <section v-if="sel" class="relative">
         <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
@@ -182,28 +300,22 @@ export default {
   data() {
     return {
       ticker: "default",
+<<<<<<< HEAD
       tickers: [
         { name: "DEMO1", price: "-" },
         { name: "DEMO2", price: "-" },
         { name: "DEMO3", price: "-" },
       ],
       sel: null,
+=======
+      tickers: [1, 2, 3, 4],
+>>>>>>> parent of 137700d ([200~)
     };
   },
 
   methods: {
     add() {
-      const newTiker = {
-        name: this.ticker,
-        price: "-",
-      };
-
-      this.tickers.push(newTiker);
-      this.ticker = "";
-    },
-
-    handleDelete(tickerToRemove) {
-      this.tickers = this.tickers.filter((t) => t !== tickerToRemove);
+      alert(this.ticker);
     },
   },
 };
