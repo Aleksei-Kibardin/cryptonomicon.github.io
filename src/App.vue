@@ -34,6 +34,7 @@
             <div class="mt-1 relative rounded-md shadow-md">
               <input
                 v-model="ticker"
+                @click="coins()"
                 @keydown.enter="add()"
                 type="text"
                 name="wallet"
@@ -66,7 +67,9 @@
                 CHD
               </span>
             </div> -->
-            <!-- <div class="text-sm text-red-600">Такой тикер уже добавлен</div> -->
+            <template v-if="massage()">
+              <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
+            </template>
           </div>
         </div>
         <button
@@ -187,32 +190,35 @@ export default {
       tickers: [],
       sel: null,
       graph: [],
+      active: false,
     };
   },
 
   methods: {
     add() {
-      const newTiker = {
-        name: this.ticker,
-        price: "-",
-      };
+      if (this.active === false) {
+        const newTicker = {
+          name: this.ticker.toUpperCase(),
+          price: "-",
+        };
 
-      this.tickers.push(newTiker);
-      setInterval(async () => {
-        const f = await fetch(
-          `https://min-api.cryptocompare.com/data/price?fsym=${newTiker.name}&tsyms=USD&api_key=bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45`
-        );
+        this.tickers.push(newTicker);
+        setInterval(async () => {
+          const f = await fetch(
+            `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45`
+          );
 
-        const data = await f.json();
+          const data = await f.json();
 
-        this.tickers.find((t) => t.name === newTiker.name).price =
-          data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2);
+          this.tickers.find((t) => t.name === newTicker.name).price =
+            data.USD > 1 ? data.USD.toFixed(2) : data.USD.toPrecision(2);
 
-        if (this.sel?.name === newTiker.name) {
-          this.graph.push(data.USD);
-        }
-      }, 5000);
-      this.ticker = "";
+          if (this.sel?.name === newTicker.name) {
+            this.graph.push(data.USD);
+          }
+        }, 5000);
+        this.ticker = "";
+      }
     },
 
     select(ticker) {
@@ -233,11 +239,28 @@ export default {
     },
 
     coins() {
-      const coins = fetch(
+      const coin = fetch(
         "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
       );
+      console.log(coin);
+      return coin;
+    },
 
-      console.log(coins);
+    massage() {
+      let res;
+      this.tickers.forEach(() => {
+        if (
+          this.tickers.find(
+            (t) => t.name.toUpperCase() === this.ticker.toUpperCase()
+          )
+        ) {
+          this.active = true;
+          res = this.active;
+        } else {
+          this.active = false;
+        }
+      });
+      return res;
     },
   },
 };
