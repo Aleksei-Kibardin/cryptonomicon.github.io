@@ -66,7 +66,7 @@
               >
                 CHD
               </span>
-            </div> -->
+            </div> s-->
             <template v-if="massage()">
               <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
             </template>
