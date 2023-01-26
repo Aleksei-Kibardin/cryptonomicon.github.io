@@ -196,7 +196,7 @@ export default {
 
   methods: {
     add() {
-      if (this.active === false) {
+      if ((this.active === false) & (this.ticker !== "")) {
         const newTicker = {
           name: this.ticker.toUpperCase(),
           price: "-",
