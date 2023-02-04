@@ -1,2 +1,4 @@
-export const trailingComa = false;
-export const endOfLine = "auto";
+module.exports = {
+    trailingComa: false,
+    "endOfLine": "auto"
+}
