@@ -1,4 +1,4 @@
 module.exports = {
-    trailingComa: false,
-    "endOfLine": "auto"
-}
+  trailingComa: false,
+  endOfLine: "auto",
+};
