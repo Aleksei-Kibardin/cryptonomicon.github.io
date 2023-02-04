@@ -207,7 +207,7 @@ export default {
           const f = await fetch(
             `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45`
           );
-
+          //dsad
           const data = await f.json();
 
           this.tickers.find((t) => t.name === newTicker.name).price =
