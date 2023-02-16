@@ -43,15 +43,15 @@
                 placeholder="Например DOGE"
               />
             </div>
-            <!-- <div
+            <div
               class="flex bg-white shadow-md p-1 rounded-md shadow-md flex-wrap"
             >
               <span
                 class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer"
               >
-                BTC
+                {{ hint }}
               </span>
-              <span
+              <!-- <span
                 class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer"
               >
                 DOGE
@@ -65,8 +65,8 @@
                 class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer"
               >
                 CHD
-              </span>
-            </div> s-->
+              </span> -->
+            </div>
             <template v-if="massage()">
               <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
             </template>
@@ -191,6 +191,7 @@ export default {
       sel: null,
       graph: [],
       active: false,
+      hint: [],
     };
   },
 
@@ -203,8 +204,8 @@ export default {
         };
 
         this.tickers.push(newTicker);
-        setInterval(async () => {
-          const f = await fetch(
+        let interval = setInterval(async () => {
+          let f = await fetch(
             `https://min-api.cryptocompare.com/data/price?fsym=${newTicker.name}&tsyms=USD&api_key=bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45`
           );
           const data = await f.json();
@@ -214,6 +215,9 @@ export default {
 
           if (this.sel?.name === newTicker.name) {
             this.graph.push(data.USD);
+          }
+          if (this.active === false) {
+            clearInterval(interval);
           }
         }, 5000);
         this.ticker = "";
@@ -227,6 +231,7 @@ export default {
 
     handleDelete(tickerToRemove) {
       this.tickers = this.tickers.filter((t) => t !== tickerToRemove);
+      clearInterval();
     },
 
     normalizeGraph() {
