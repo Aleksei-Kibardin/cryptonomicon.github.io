@@ -92,12 +92,26 @@
           </svg>
           Добавить
         </button>
+        <hr class="w-full border-t border-gray-600 my-4" />
+        <div>
+          <button
+            class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >
+            Назад
+          </button>
+          <button
+            class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >
+            Вперед
+          </button>
+          <div>Поиск: <input v-model="filter" /></div>
+        </div>
       </section>
       <template v-if="tickers.length">
         <hr class="w-full border-t border-gray-600 my-4" />
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           <div
-            v-for="t in tickers"
+            v-for="t in filteredlist()"
             :key="t.name"
             @click="select(t)"
             :class="{
@@ -192,6 +206,7 @@ export default {
       graph: [],
       active: false,
       hint: [],
+      filter: "",
     };
   },
 
@@ -207,6 +222,10 @@ export default {
   },
 
   methods: {
+    filteredlist() {
+      return this.tickers.filter((ticker) => ticker.name.includes(this.filter));
+    },
+
     subscribeToUpdates(tickerName) {
       setInterval(async () => {
         let f = await fetch(
@@ -253,6 +272,14 @@ export default {
       return this.graph.map(
         (price) => 5 + ((price - minValue) * 95) / (maxValue - minValue)
       );
+    },
+
+    coins() {
+      const coin = fetch(
+        "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
+      );
+      console.log(coin);
+      return coin;
     },
 
     massage() {
