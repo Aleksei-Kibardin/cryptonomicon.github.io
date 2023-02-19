@@ -248,6 +248,8 @@ export default {
 
         this.tickers.push(newTicker);
 
+        this.filter = "";
+
         localStorage.setItem(
           "cryptonomicon-list",
           JSON.stringify(this.tickers)
