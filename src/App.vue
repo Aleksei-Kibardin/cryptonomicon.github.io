@@ -242,14 +242,6 @@ export default {
       );
     },
 
-    coins() {
-      const coin = fetch(
-        "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
-      );
-      console.log(coin);
-      return coin;
-    },
-
     massage() {
       let res;
       this.tickers.forEach(() => {
