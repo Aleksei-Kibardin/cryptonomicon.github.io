@@ -230,7 +230,7 @@ export default {
   methods: {
     filteredTickers() {
       const start = (this.page - 1) * 6;
-      const end = this.page * 6 - 1;
+      const end = this.page * 6;
 
       const filteredTickers = this.tickers.filter((ticker) =>
         ticker.name.includes(this.filter)
@@ -239,19 +239,6 @@ export default {
       this.hasNextPage = filteredTickers.length > end;
 
       return filteredTickers.slice(start, end);
-    },
-
-    filteredList() {
-      const start = (this.page - 1) * 6;
-      const end = this.page * 6 - 1;
-
-      const filteredlist = this.tickers.filter((ticker) =>
-        ticker.name.includes(this.filter)
-      );
-
-      this.hasNextPage = filteredlist.length > end;
-
-      return filteredlist.slice(start, end);
     },
 
     subscribeToUpdates(tickerName) {
