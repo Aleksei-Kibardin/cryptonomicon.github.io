@@ -217,7 +217,18 @@ export default {
   },
 
   created() {
+    const windowData = Object.fromEntries(
+      new URL(window.location).searchParams.entries()
+    );
     const tickersData = localStorage.getItem("cryptonomicon-list");
+
+    if (windowData.filter) {
+      this.filter = windowData.filter;
+    }
+
+    if (windowData.page) {
+      this.page = windowData.page;
+    }
 
     if (tickersData) {
       this.tickers = JSON.parse(tickersData);
@@ -315,6 +326,25 @@ export default {
         }
       });
       return res;
+    },
+  },
+  watch: {
+    filter() {
+      this.page = 1;
+
+      window.history.pushState(
+        null,
+        document.title,
+        `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+      );
+    },
+
+    page() {
+      window.history.pushState(
+        null,
+        document.title,
+        `${window.location.pathname}?filter=${this.filter}&page=${this.page}`
+      );
     },
   },
 };
