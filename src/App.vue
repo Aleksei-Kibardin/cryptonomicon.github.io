@@ -116,7 +116,7 @@
                 {{ t.name }} - USD
               </dt>
               <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ formatedPrice(t.price) }}
+                {{ formatPrice(t.price) }}
               </dd>
             </div>
             <div class="w-full border-t border-gray-200"></div>
@@ -211,13 +211,13 @@ export default {
     );
     const tickersData = localStorage.getItem("cryptonomicon-list");
 
-    if (windowData.filter) {
-      this.filter = windowData.filter;
-    }
+    const VALID_KEYS = ["filter", "page"];
 
-    if (windowData.page) {
-      this.page = windowData.page;
-    }
+    VALID_KEYS.forEach((key) => {
+      if (windowData[key]) {
+        this[key] = windowData[key];
+      }
+    });
 
     if (tickersData) {
       this.tickers = JSON.parse(tickersData);
@@ -265,7 +265,7 @@ export default {
       );
     },
 
-    pageStateOptins() {
+    pageStateOptions() {
       return {
         filter: this.filter,
         page: this.page,
@@ -278,11 +278,14 @@ export default {
       this.tickers
         .filter((t) => t.name === tickerName)
         .forEach((t) => {
+          if (t === this.selectedTicker) {
+            this.graph.push(price);
+          }
           t.price = price;
         });
     },
 
-    formatedPrice(price) {
+    formatPrice(price) {
       if (price === "-") {
         return price;
       }
@@ -290,17 +293,19 @@ export default {
     },
 
     add() {
-      const currentTicker = {
-        name: this.ticker.toUpperCase(),
-        price: "-",
-      };
+      if ((this.active === false) & (this.ticker !== "")) {
+        const currentTicker = {
+          name: this.ticker.toUpperCase(),
+          price: "-",
+        };
 
-      this.tickers = [...this.tickers, currentTicker];
-      this.filter = "";
-      this.ticker = "";
-      subscribeToTickers(currentTicker.name, (newPrice) => {
-        this.updateTicker(currentTicker.name, newPrice);
-      });
+        this.tickers = [...this.tickers, currentTicker];
+        this.filter = "";
+        this.ticker = "";
+        subscribeToTickers(currentTicker.name, (newPrice) => {
+          this.updateTicker(currentTicker.name, newPrice);
+        });
+      }
     },
 
     select(ticker) {
@@ -361,7 +366,7 @@ export default {
       this.page = 1;
     },
 
-    page(value) {
+    pageStateOptions(value) {
       window.history.pushState(
         null,
         document.title,
