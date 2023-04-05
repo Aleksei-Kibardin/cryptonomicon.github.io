@@ -298,7 +298,8 @@ export default {
           name: this.ticker.toUpperCase(),
           price: "-",
         };
-
+        console.log(this.filteredTickers);
+        console.log(this.paginatedTickers);
         this.tickers = [...this.tickers, currentTicker];
         this.filter = "";
         this.ticker = "";
