@@ -1,7 +1,7 @@
 -# cryptonomicon
 
 
--###Hello! to view all my projects, I advise you to open the main page of my profile
+-### Hello! to view all my projects, I advise you to open the main page of my profile
 website link: https://cryptonomicon-5491f4.netlify.app/
 
 -## Project setup
