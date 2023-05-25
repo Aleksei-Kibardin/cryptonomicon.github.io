@@ -14,6 +14,7 @@ socket.addEventListener("message", (e) => {
     FROMSYMBOL: currency,
     PRICE: newPrice,
   } = JSON.parse(e.data);
+  console.log(JSON.parse(e.data));
   if (type !== AGGREGATE_INDEX || newPrice === undefined) {
     return;
   }
