@@ -19,13 +19,12 @@ socket.addEventListener("message", (e) => {
     return;
   }
   const handlers = tickersHandlers.get(currency) ?? [];
-  handlers.forEach((fn) => fn(newPrice));
+  handlers.forEach((fn) => fn(newPrice, type));
 });
 
 //TODO: refactor to use URLSearchParams
 function sendToWs(message) {
   const stringifyMassage = JSON.stringify(message);
-
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(stringifyMassage);
     return;
@@ -58,6 +57,7 @@ export const subscribeToTickers = (ticker, cb) => {
   const subsribers = tickersHandlers.get(ticker) || [];
   tickersHandlers.set(ticker, [...subsribers, cb]);
   subscribeToTickersOnWs(ticker);
+  console.log(ticker);
 };
 
 export const unsubscribeFromTicker = (ticker) => {

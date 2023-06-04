@@ -111,7 +111,12 @@
             }"
             class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
           >
-            <div class="px-4 py-5 sm:p-6 text-center">
+            <div
+              class="px-4 py-5 sm:p-6 text-center"
+              :class="{
+                'bg-red-600/20': t.type !== '5',
+              }"
+            >
               <dt class="text-sm font-medium text-gray-500 truncate">
                 {{ t.name }} - USD
               </dt>
@@ -222,8 +227,8 @@ export default {
     if (tickersData) {
       this.tickers = JSON.parse(tickersData);
       this.tickers.forEach((ticker) => {
-        subscribeToTickers(ticker.name, (newPrice) => {
-          this.updateTicker(ticker.name, newPrice);
+        subscribeToTickers(ticker.name, (newPrice, type) => {
+          this.updateTicker(ticker.name, newPrice, type);
         });
       });
     }
@@ -274,13 +279,14 @@ export default {
   },
 
   methods: {
-    updateTicker(tickerName, price) {
+    updateTicker(tickerName, price, type) {
       this.tickers
         .filter((t) => t.name === tickerName)
         .forEach((t) => {
           if (t === this.selectedTicker) {
             this.graph.push(price);
           }
+          t.type = type;
           t.price = price;
         });
     },
@@ -297,14 +303,16 @@ export default {
         const currentTicker = {
           name: this.ticker.toUpperCase(),
           price: "-",
+          type: "",
         };
         console.log(this.filteredTickers);
         console.log(this.paginatedTickers);
         this.tickers = [...this.tickers, currentTicker];
         this.filter = "";
         this.ticker = "";
-        subscribeToTickers(currentTicker.name, (newPrice) => {
-          this.updateTicker(currentTicker.name, newPrice);
+        subscribeToTickers(currentTicker.name, (newPrice, type) => {
+          this.updateTicker(currentTicker.name, newPrice, type);
+          currentTicker.type = type;
         });
       }
     },
