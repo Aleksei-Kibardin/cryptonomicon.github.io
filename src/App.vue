@@ -288,6 +288,7 @@ export default {
           }
           t.type = type;
           t.price = price;
+          console.log(price);
         });
     },
 

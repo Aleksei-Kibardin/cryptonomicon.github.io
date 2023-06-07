@@ -1,11 +1,15 @@
 const API_KEY =
   "bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45";
 
-const tickersHandlers = new Map();
+let tickersHandlers = new Map();
+
 const socket = new WebSocket(
   `wss://streamer.cryptocompare.com/v2?api_key=${API_KEY}`
 );
-
+const bc = new BroadcastChannel("bc-api");
+bc.addEventListener("message", (e) => {
+  console.log(e.data);
+});
 const AGGREGATE_INDEX = "5";
 
 socket.addEventListener("message", (e) => {
@@ -14,10 +18,10 @@ socket.addEventListener("message", (e) => {
     FROMSYMBOL: currency,
     PRICE: newPrice,
   } = JSON.parse(e.data);
-  console.log(JSON.parse(e.data));
   if (type !== AGGREGATE_INDEX || newPrice === undefined) {
     return;
   }
+  bc.postMessage("1");
   const handlers = tickersHandlers.get(currency) ?? [];
   handlers.forEach((fn) => fn(newPrice, type));
 });
