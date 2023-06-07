@@ -1,12 +1,20 @@
 const API_KEY =
   "bbb253ca77586e7f3446f77050df127e8ebf0eca7bb8a3401f9013e446c00e45";
 
-const tickersHandlers = new Map();
+let tickersHandlers = new Map();
+
+const bc = new BroadcastChannel("bc-api");
+
 const socket = new WebSocket(
   `wss://streamer.cryptocompare.com/v2?api_key=${API_KEY}`
 );
 
 const AGGREGATE_INDEX = "5";
+
+bc.addEventListener("message", (e) => {
+  tickersHandlers = e.data;
+  console.log(tickersHandlers);
+});
 
 socket.addEventListener("message", (e) => {
   const {
@@ -14,7 +22,6 @@ socket.addEventListener("message", (e) => {
     FROMSYMBOL: currency,
     PRICE: newPrice,
   } = JSON.parse(e.data);
-  console.log(JSON.parse(e.data));
   if (type !== AGGREGATE_INDEX || newPrice === undefined) {
     return;
   }
@@ -54,6 +61,7 @@ function unsubscribeFromTickersOnWs(ticker) {
 }
 
 export const subscribeToTickers = (ticker, cb) => {
+  console.log(tickersHandlers);
   const subsribers = tickersHandlers.get(ticker) || [];
   tickersHandlers.set(ticker, [...subsribers, cb]);
   subscribeToTickersOnWs(ticker);
@@ -64,3 +72,7 @@ export const unsubscribeFromTicker = (ticker) => {
   tickersHandlers.delete(ticker);
   unsubscribeFromTickersOnWs(ticker);
 };
+
+export function Broadcast() {
+  bc.postMessage(tickersHandlers);
+}

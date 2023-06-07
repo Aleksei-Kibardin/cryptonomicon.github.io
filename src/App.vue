@@ -192,7 +192,7 @@
 </template>
 
 <script>
-import { subscribeToTickers, unsubscribeFromTicker } from "./api";
+import { subscribeToTickers, unsubscribeFromTicker, Broadcast } from "./api";
 
 export default {
   name: "App",
@@ -288,7 +288,9 @@ export default {
           }
           t.type = type;
           t.price = price;
+          console.log(price);
         });
+      Broadcast;
     },
 
     formatPrice(price) {
