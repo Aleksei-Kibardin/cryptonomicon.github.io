@@ -25,80 +25,25 @@
       </svg>
     </div> -->
     <div class="container">
-      <section>
-        <div class="flex">
-          <div class="max-w-xs">
-            <label for="wallet" class="block text-sm font-medium text-gray-700"
-              >Тикер</label
-            >
-            <div class="mt-1 relative rounded-md shadow-md">
-              <input
-                v-model="ticker"
-                @click="coins()"
-                @keydown.enter="add()"
-                type="text"
-                name="wallet"
-                id="wallet"
-                class="block w-full pr-10 border-gray-300 text-gray-900 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
-                placeholder="Например DOGE"
-              />
-            </div>
-            <div
-              class="flex bg-white shadow-md p-1 rounded-md shadow-md flex-wrap"
-            >
-              <span
-                class="inline-flex items-center px-2 m-1 rounded-md text-xs font-medium bg-gray-300 text-gray-800 cursor-pointer"
-              >
-                {{ hint }}
-              </span>
-              <!-- <span
-              TODO: create autocomplete
-              </span> -->
-            </div>
-            <template v-if="massage()">
-              <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
-            </template>
-          </div>
-        </div>
+      <add-ticker @add-ticker="add" @message="message" :tickers="tickers" />
+      <hr class="w-full border-t border-gray-600 my-4" />
+      <div>
         <button
-          v-on:click="add()"
-          type="button"
-          class="my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          v-if="page > 1"
+          @click="page = page - 1"
         >
-          <!-- Heroicon name: solid/mail -->
-          <svg
-            class="-ml-0.5 mr-2 h-6 w-6"
-            xmlns="http://www.w3.org/2000/svg"
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="#ffffff"
-          >
-            <path
-              d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-            ></path>
-          </svg>
-          Добавить
+          Назад
         </button>
-        <hr class="w-full border-t border-gray-600 my-4" />
-        <div>
-          <button
-            class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            v-if="page > 1"
-            @click="page = page - 1"
-          >
-            Назад
-          </button>
-          <button
-            class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-            @click="page = page + 1"
-            v-if="hasNextPage"
-          >
-            Вперед
-          </button>
-          <div>Поиск: <input v-model="filter" @input="page = 1" /></div>
-        </div>
-      </section>
+        <button
+          class="mx-2 my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          @click="page = page + 1"
+          v-if="hasNextPage"
+        >
+          Вперед
+        </button>
+        <div>Поиск: <input v-model="filter" @input="page = 1" /></div>
+      </div>
       <template v-if="tickers.length">
         <hr class="w-full border-t border-gray-600 my-4" />
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -151,7 +96,10 @@
         <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
           {{ selectedTicker.name }} - USD
         </h3>
-        <div class="flex items-end border-gray-600 border-b border-l h-64">
+        <div
+          class="flex items-end border-gray-600 border-b border-l h-64"
+          ref="graph"
+        >
           <div
             v-for="(bar, idx) in normalizedGraph"
             :key="idx"
@@ -193,20 +141,21 @@
 
 <script>
 import { subscribeToTickers, unsubscribeFromTicker } from "./api";
+import addTicker from "./components/addTicker.vue";
 
 export default {
+  components: { addTicker },
   name: "App",
 
   data() {
     return {
-      ticker: "",
       tickers: [],
       selectedTicker: null,
       graph: [],
       page: 1,
       active: false,
-      hint: [],
       filter: "",
+      maxGraphElements: 1,
     };
   },
 
@@ -234,6 +183,14 @@ export default {
     }
 
     setInterval(this.udateTickers, 4000);
+  },
+
+  mounted() {
+    window.addEventListener("resize", this.calcilateMaxGraphElements);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener("resize", this.calcilateMaxGraphElements);
   },
 
   computed: {
@@ -279,12 +236,25 @@ export default {
   },
 
   methods: {
+    message(res) {
+      this.active = res;
+    },
+    calcilateMaxGraphElements() {
+      while (!this.$refs.graph) {
+        return;
+      }
+      this.maxGraphElements = this.$refs.graph.clientWidth / 38;
+    },
+
     updateTicker(tickerName, price, type) {
       this.tickers
         .filter((t) => t.name === tickerName)
         .forEach((t) => {
           if (t === this.selectedTicker) {
             this.graph.push(price);
+            if (this.graph.length > this.maxGraphElements) {
+              this.graph.shift();
+            }
           }
           t.type = type;
           t.price = price;
@@ -299,18 +269,15 @@ export default {
       return price > 1 ? price.toFixed(2) : price.toPrecision(2);
     },
 
-    add() {
-      if ((this.active === false) & (this.ticker !== "")) {
+    add(ticker) {
+      if ((this.active === false) & (ticker !== "")) {
         const currentTicker = {
-          name: this.ticker.toUpperCase(),
+          name: ticker.toUpperCase(),
           price: "-",
           type: "",
         };
-        console.log(this.filteredTickers);
-        console.log(this.paginatedTickers);
         this.tickers = [...this.tickers, currentTicker];
         this.filter = "";
-        this.ticker = "";
         subscribeToTickers(currentTicker.name, (newPrice, type) => {
           this.updateTicker(currentTicker.name, newPrice, type);
           currentTicker.type = type;
@@ -320,6 +287,7 @@ export default {
 
     select(ticker) {
       this.selectedTicker = ticker;
+      this.$nextTick().then(this.calcilateMaxGraphElements);
     },
 
     handleDelete(tickerToRemove) {
@@ -329,31 +297,6 @@ export default {
         this.selectedTicker = null;
       }
       unsubscribeFromTicker(tickerToRemove.name);
-    },
-
-    coins() {
-      const coin = fetch(
-        "https://min-api.cryptocompare.com/data/all/coinlist?summary=true"
-      );
-      console.log(coin);
-      return coin;
-    },
-
-    massage() {
-      let res;
-      this.tickers.forEach(() => {
-        if (
-          this.tickers.find(
-            (t) => t.name.toUpperCase() === this.ticker.toUpperCase()
-          )
-        ) {
-          this.active = true;
-          res = this.active;
-        } else {
-          this.active = false;
-        }
-      });
-      return res;
     },
   },
 

@@ -3,14 +3,18 @@ const API_KEY =
 
 let tickersHandlers = new Map();
 
+const bc = new BroadcastChannel("bc-api");
+
 const socket = new WebSocket(
   `wss://streamer.cryptocompare.com/v2?api_key=${API_KEY}`
 );
-const bc = new BroadcastChannel("bc-api");
-bc.addEventListener("message", (e) => {
-  console.log(e.data);
-});
+
 const AGGREGATE_INDEX = "5";
+
+bc.addEventListener("message", (e) => {
+  tickersHandlers = e.data;
+  console.log(tickersHandlers);
+});
 
 socket.addEventListener("message", (e) => {
   const {
@@ -21,9 +25,9 @@ socket.addEventListener("message", (e) => {
   if (type !== AGGREGATE_INDEX || newPrice === undefined) {
     return;
   }
-  bc.postMessage("1");
   const handlers = tickersHandlers.get(currency) ?? [];
   handlers.forEach((fn) => fn(newPrice, type));
+  Broadcast();
 });
 
 //TODO: refactor to use URLSearchParams
@@ -58,6 +62,7 @@ function unsubscribeFromTickersOnWs(ticker) {
 }
 
 export const subscribeToTickers = (ticker, cb) => {
+  console.log(tickersHandlers);
   const subsribers = tickersHandlers.get(ticker) || [];
   tickersHandlers.set(ticker, [...subsribers, cb]);
   subscribeToTickersOnWs(ticker);
@@ -68,3 +73,7 @@ export const unsubscribeFromTicker = (ticker) => {
   tickersHandlers.delete(ticker);
   unsubscribeFromTickersOnWs(ticker);
 };
+
+function Broadcast() {
+  bc.postMessage(tickersHandlers);
+}
